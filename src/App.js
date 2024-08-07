@@ -3,30 +3,31 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
-   const [excuse, setExcuse]= useState([]);
+   const [catApi, setCatApi]= useState([]);
 
   useEffect(()=>{fetchApi()}, [])
 
-   const fetchApi = (category)=>{
-      axios.get(`https://excuser-three.vercel.app/v1/excuse/${category}`).then(
+   const fetchApi = ()=>{
+       axios.get(`https://api.thecatapi.com/v1/images/search`).then(
         (res)=>{
           console.log(res.data);
-          setExcuse(res.data);
+          setCatApi(res.data);
         }
       )
    }
    return (
    <div className='App'>
       <div className='button'>
-        <button onClick={()=>fetchApi("party")}>Party</button>
-        <button onClick={()=>fetchApi("family")}>Family</button>
-        <button onClick={()=>fetchApi("office")}>Office</button>
+       <button onClick={fetchApi}>Who's the Cat ?</button>
       </div>
       <div className='listData'>
-          {excuse.map(((data, index)=>(
-              <h1 key={index}>
-                  {data.excuse}
-              </h1>
+          {catApi.map(((data, index)=>(
+                        <img
+                        key={index}
+                        src={data.url}
+                        alt={`Cat ${index}`}
+                        style={{ width:"100%", height:"60%" }}
+                      />
           )))}
       </div>
     </div>
