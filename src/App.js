@@ -1,37 +1,31 @@
-import {  useEffect, useState } from 'react';
-import axios from 'axios';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import './App.css';
+import Home from './Pages/Home';
+import Contact from './Pages/Contact';
+import Profile from './Pages/Profile';
+import ErrorPage from './Pages/ErrorPage';
+import { useState, createContext } from 'react';
+
+export const AppContext =  createContext();
 
 function App() {
-   const [catApi, setCatApi]= useState([]);
-
-  useEffect(()=>{fetchApi()}, [])
-
-   const fetchApi = ()=>{
-       axios.get(`https://api.thecatapi.com/v1/images/search`).then(
-        (res)=>{
-          console.log(res.data);
-          setCatApi(res.data);
-        }
-      )
-   }
+  const [username,setUsername]= useState("Saleem");
    return (
-   <div className='App'>
-      <div className='button'>
-       <button onClick={fetchApi}>Who's the Cat ?</button>
-      </div>
-      <div className='listData'>
-          {catApi.map(((data, index)=>(
-                        <img
-                        key={index}
-                        src={data.url}
-                        alt={`Cat ${index}`}
-                        style={{ width:"100%", height:"60%" }}
-                      />
-          )))}
-      </div>
+    <AppContext.Provider value={{username, setUsername}}>
+    <Router>
+    <div className='App'>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/contact' element={<Contact username={username}/>}/>
+        <Route path='/profile' element={<Profile username={username} setUsername={setUsername}/>}/>
+        <Route path='*' element={<ErrorPage/>}/>
+      </Routes>
     </div>
+    </Router>
+    </AppContext.Provider>
   );
+
+  
 }
 
 export default App;
